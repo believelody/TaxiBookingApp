@@ -20,7 +20,6 @@ const App = () => {
   return (
     <Provider store={createStore(initialState)}>
       <Router scenes={scenes}>
-        <StatusBar barStyle="default" />
         <SafeAreaView style={styles.container}>
           <Home />
         </SafeAreaView>
