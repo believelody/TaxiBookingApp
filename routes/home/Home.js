@@ -1,22 +1,16 @@
-import { Container } from 'native-base';
-import React, { useEffect } from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Container} from 'native-base';
+import React, {useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import {connect, useSelector} from 'react-redux';
 import Map from '../../components/map/Map';
-import {setNameAction} from '../../store/home/action';
+import {getCurrentLocationAction} from '../../store/home/action';
 
-const Home = ({setName}) => {
-  const region = {
-    latitude: -4.441931,
-    longitude: 15.266293,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
-  const {name} = useSelector((state) => state.homeReducer);
+const Home = ({getCurrentLocation}) => {
+  const {region} = useSelector((state) => state.homeReducer);
 
   useEffect(() => {
-    setName();
-  }, [setName]);
+    getCurrentLocation();
+  }, [getCurrentLocation]);
 
   return (
     <Container>
@@ -34,7 +28,7 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-  setName: setNameAction,
+  getCurrentLocation: getCurrentLocationAction,
 };
 
 export default connect(null, mapDispatchToProps)(Home);

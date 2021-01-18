@@ -1,16 +1,36 @@
 import update from 'react-addons-update';
+import {Dimensions} from 'react-native';
 
-const handleSetName = (state, action) =>
+const {width, height} = Dimensions.get('window');
+const ASPECT_RATION = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = ASPECT_RATION * LATITUDE_DELTA;
+
+const handleGetCurrentLocation = (state, {payload}) =>
   update(state, {
-    name: {$set: action.payload},
+    region: {
+      latitude: {
+        $set: payload.latitude,
+      },
+      longitude: {
+        $set: payload.longitude,
+      },
+      latitudeDelta: {$set: LATITUDE_DELTA},
+      longitudeDelta: {$set: LONGITUDE_DELTA},
+    },
   });
 
 const ACTIONS_HANDLERS = {
-  SET_NAME: handleSetName,
+  GET_CURRENT_LOCATION: handleGetCurrentLocation,
 };
 
 const initialState = {
-  name: '',
+  region: {
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0,
+    longitudeDelta: 0,
+  },
 };
 
 export default function homeReducer(state = initialState, action) {
