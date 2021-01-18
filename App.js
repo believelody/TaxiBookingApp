@@ -8,20 +8,29 @@
 
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text, StatusBar} from 'react-native';
+import {Router} from 'react-native-router-flux';
+import {Provider} from 'react-redux';
+import createStore from './store/createStore';
+import Home from './routes/home/Home';
+import scenes from './routes/scenes';
 
-function App() {
+const App = () => {
+  const initialState = window.__INITIAL_STATE__;
+
   return (
-    <>
-      <StatusBar barStyle="default" />
-      <SafeAreaView style={styles.container}>
-        <Text>Hey Taxi</Text>
-      </SafeAreaView>
-    </>
+    <Provider store={createStore(initialState)}>
+      <Router scenes={scenes}>
+        <StatusBar barStyle="default" />
+        <SafeAreaView style={styles.container}>
+          <Home />
+        </SafeAreaView>
+      </Router>
+    </Provider>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {flex: 1},
 });
 
 export default App;

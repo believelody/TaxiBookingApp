@@ -10,8 +10,16 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "native-base": "^2.15.2",
+    "prop-types": "^15.7.2",
     "react": "16.13.1",
-    "react-native": "0.63.4"
+    "react-addons-update": "^15.6.3",
+    "react-native": "0.63.4",
+    "react-native-maps": "^0.27.1",
+    "react-native-router-flux": "^3.39.1",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -21,7 +29,8 @@
     "eslint": "^6.5.1",
     "jest": "^25.1.0",
     "metro-react-native-babel-preset": "^0.59.0",
-    "react-test-renderer": "16.13.1"
+    "react-test-renderer": "16.13.1",
+    "redux-logger": "^3.0.6"
   },
   "jest": {
     "preset": "react-native"
