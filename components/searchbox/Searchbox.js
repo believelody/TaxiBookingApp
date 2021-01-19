@@ -2,10 +2,30 @@ import {Input, InputGroup, View} from 'native-base';
 import React from 'react';
 import {Dimensions, StyleSheet, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect, useSelector} from 'react-redux';
+import {
+  getInputDataAction,
+  toggleSearchResultAction,
+  getAddressesPredictionsAction,
+} from '../../store/home/action';
+import SearchResults from '../search-results/SearchResults';
 
 const {width} = Dimensions.get('window');
 
-const Searchbox = () => {
+const Searchbox = ({
+  getInputData,
+  toggleSearchResult,
+  getAddressesPredictions,
+}) => {
+  const {resultTypes, inputData} = useSelector((state) => state.homeReducer);
+  const handleChangeText = (key, value) => {
+    getInputData({key, value});
+    getAddressesPredictions();
+  };
+  const handleFocus = value => {
+      toggleSearchResult(value);
+      getAddressesPredictions();
+  };
   return (
     <View style={styles.searchBox}>
       <View style={styles.inputWrapper}>
@@ -13,8 +33,12 @@ const Searchbox = () => {
         <InputGroup>
           <Icon name="search" size={15} color="#FF5E34" />
           <Input
-            style={styles.inpuSearch}
+            style={styles.inputSearch}
+            value={inputData.pickup}
             placeholder="Choose pick-up location"
+            onFocus={() => handleFocus('pickup')}
+            onBlur={() => handleFocus('')}
+            onChangeText={(text) => handleChangeText('pickup', text)}
           />
         </InputGroup>
       </View>
@@ -23,11 +47,16 @@ const Searchbox = () => {
         <InputGroup>
           <Icon name="search" size={15} color="#FF5E34" />
           <Input
-            style={styles.inpuSearch}
+            style={styles.inputSearch}
+            value={inputData.dropoff}
             placeholder="Choose drop-off location"
+            onFocus={() => handleFocus('dropoff')}
+            onBlur={() => handleFocus('')}
+            onChangeText={(text) => handleChangeText('dropoff', text)}
           />
         </InputGroup>
       </View>
+      {Object.values(resultTypes).some((v) => v) && <SearchResults />}
     </View>
   );
 };
@@ -36,7 +65,7 @@ const styles = StyleSheet.create({
   searchBox: {
     top: 50,
     position: 'absolute',
-    width: width,
+    width,
   },
   inputWrapper: {
     marginLeft: 15,
@@ -57,6 +86,7 @@ const styles = StyleSheet.create({
   },
   inputSearch: {
     fontSize: 14,
+    padding: 0,
   },
   label: {
     fontSize: 10,
@@ -67,4 +97,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Searchbox;
+const mapDispatchToProps = {
+  getInputData: getInputDataAction,
+  toggleSearchResult: toggleSearchResultAction,
+  getAddressesPredictions: getAddressesPredictionsAction,
+};
+
+export default connect(null, mapDispatchToProps)(Searchbox);
