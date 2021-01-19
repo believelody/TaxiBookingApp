@@ -20,8 +20,61 @@ const handleGetCurrentLocation = (state, {payload}) =>
     },
   });
 
+const handleGetInputData = (state, {payload}) => {
+  const {key, value} = payload;
+
+  return update(state, {
+    inputData: {
+      [key]: {$set: value},
+    },
+  });
+};
+
+const handleSearchResult = (state, {payload}) => {
+  if (payload === 'pickup') {
+    return update(state, {
+      resultTypes: {
+        pickup: {$set: true},
+        dropoff: {$set: false},
+      },
+      // inputData: {
+      //   dropoff: {$set: ''},
+      // },
+      predictions: {$set: []},
+    });
+  } else if (payload === 'dropoff') {
+    return update(state, {
+      resultTypes: {
+        pickup: {$set: false},
+        dropoff: {$set: true},
+      },
+      // inputData: {
+      //   pickup: {$set: ''},
+      // },
+      predictions: {$set: []},
+    });
+  } else {
+    return update(state, {
+      resultTypes: {
+        pickup: {$set: false},
+        dropoff: {$set: false},
+      },
+      predictions: {$set: []},
+    });
+  }
+};
+
+const handleGetAddressesPredictions = (state, {payload}) => {
+  return update(state, {
+    predictions: {$set: payload},
+  });
+};
+
 const ACTIONS_HANDLERS = {
   GET_CURRENT_LOCATION: handleGetCurrentLocation,
+  GET_INPUT_DATA: handleGetInputData,
+  TOGGLE_SEARCH_RESULT: handleSearchResult,
+  GET_ADDRESSES_PREDICTIONS: handleGetAddressesPredictions,
 };
 
 const initialState = {
@@ -31,6 +84,9 @@ const initialState = {
     latitudeDelta: 0,
     longitudeDelta: 0,
   },
+  inputData: {},
+  resultTypes: {pickup: false, dropoff: false},
+  predictions: [],
 };
 
 export default function homeReducer(state = initialState, action) {
