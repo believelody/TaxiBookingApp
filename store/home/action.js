@@ -1,10 +1,8 @@
 import RNGooglePlaces from 'react-native-google-places';
+import request from '../../utils/request';
 import homeTypes from './types';
-
-export const setNameAction = () => ({
-  type: homeTypes.SET_NAME,
-  payload: 'Eman',
-});
+import {GOOGLE_API_KEY} from '@env';
+import calculateFare from '../../utils/farCalculator';
 
 export const getCurrentLocationAction = () => (dispatch) => {
   navigator.geolocation.getCurrentPosition(
@@ -30,7 +28,6 @@ export const toggleSearchResultAction = (payload) => ({
 });
 
 export const getAddressesPredictionsAction = () => (dispatch, getState) => {
-  console.warn(getState().homeReducer.inputData.pickup);
   let userInput = getState().homeReducer.resultTypes.pickup
     ? getState().homeReducer.inputData.pickup
     : getState().homeReducer.inputData.dropoff;
@@ -39,12 +36,56 @@ export const getAddressesPredictionsAction = () => (dispatch, getState) => {
     country: 'FR',
   })
     .then((res) => {
-      console.warn(userInput);
-      console.warn(res);
       dispatch({
         type: homeTypes.GET_ADDRESSES_PREDICTIONS,
         payload: res,
       });
     })
     .catch((error) => console.log(error.message));
+};
+
+export const getSelectedAddressAction = (payload) => (dispatch) => {
+  RNGooglePlaces.lookUpPlaceByID(payload)
+    .then((res) => {
+      dispatch({
+        type: homeTypes.GET_SELECTED_ADDRESS,
+        payload: res,
+      });
+    })
+    .catch((error) => console.log(error));
+};
+
+export const getDistanceMatrixAction = (payload) => async (dispatch) => {
+  const baseRate = 0.4;
+  const timeRate = 0.14;
+  const distanceRate = 0.97;
+  const surge = 1;
+  await request
+    .get('https://maps.googleapis.com/maps/api/distancematrix/json')
+    .query({
+      origins: `${payload.selectedPickup.location.latitude},${payload.selectedPickup.location.longitude}`,
+      destinations: `${payload.selectedDropoff.location.latitude},${payload.selectedDropoff.location.longitude}`,
+      mode: 'driving',
+      key: GOOGLE_API_KEY,
+    })
+    .finish((error, res) => {
+      const fare = calculateFare(
+        baseRate,
+        timeRate,
+        res.body.rows[0].elements[0].duration.value,
+        distanceRate,
+        res.body.rows[0].elements[0].distance.value,
+        surge,
+      );
+      dispatch({
+        type: homeTypes.GET_DISTANCE_MATRIX,
+        payload: {
+          distanceMatrix: res.body,
+        },
+      });
+      dispatch({
+        type: homeTypes.GET_FARE,
+        payload: fare,
+      });
+    });
 };

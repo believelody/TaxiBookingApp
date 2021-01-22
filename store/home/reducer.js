@@ -37,9 +37,6 @@ const handleSearchResult = (state, {payload}) => {
         pickup: {$set: true},
         dropoff: {$set: false},
       },
-      // inputData: {
-      //   dropoff: {$set: ''},
-      // },
       predictions: {$set: []},
     });
   } else if (payload === 'dropoff') {
@@ -48,9 +45,6 @@ const handleSearchResult = (state, {payload}) => {
         pickup: {$set: false},
         dropoff: {$set: true},
       },
-      // inputData: {
-      //   pickup: {$set: ''},
-      // },
       predictions: {$set: []},
     });
   } else {
@@ -70,11 +64,40 @@ const handleGetAddressesPredictions = (state, {payload}) => {
   });
 };
 
+const handleGetSelectedAddress = (state, {payload}) => {
+  let selectedTitle = state.resultTypes.pickup
+    ? 'selectedPickup'
+    : 'selectedDropoff';
+  return update(state, {
+    [selectedTitle]: {$set: payload},
+    resultTypes: {
+      pickup: {$set: false},
+      dropoff: {$set: false},
+    },
+  });
+};
+
+const handleGetDistanceMatrix = (state, {payload}) => {
+  return update(state, {
+    distanceMatrix: {$set: payload.distanceMatrix},
+    fare: {$set: payload.fare},
+  });
+};
+
+const handleGetFare = (state, {payload}) => {
+  return update(state, {
+    fare: {$set: payload},
+  });
+};
+
 const ACTIONS_HANDLERS = {
   GET_CURRENT_LOCATION: handleGetCurrentLocation,
   GET_INPUT_DATA: handleGetInputData,
   TOGGLE_SEARCH_RESULT: handleSearchResult,
   GET_ADDRESSES_PREDICTIONS: handleGetAddressesPredictions,
+  GET_SELECTED_ADDRESS: handleGetSelectedAddress,
+  GET_DISTANCE_MATRIX: handleGetDistanceMatrix,
+  GET_FARE: handleGetFare,
 };
 
 const initialState = {
@@ -87,6 +110,10 @@ const initialState = {
   inputData: {},
   resultTypes: {pickup: false, dropoff: false},
   predictions: [],
+  selectedDropoff: null,
+  selectedPickup: null,
+  distanceMatrix: {},
+  fare: 0,
 };
 
 export default function homeReducer(state = initialState, action) {

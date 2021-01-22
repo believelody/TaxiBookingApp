@@ -1,5 +1,5 @@
+import React, {useEffect} from 'react';
 import {Input, InputGroup, View} from 'native-base';
-import React from 'react';
 import {Dimensions, StyleSheet, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect, useSelector} from 'react-redux';
@@ -7,6 +7,7 @@ import {
   getInputDataAction,
   toggleSearchResultAction,
   getAddressesPredictionsAction,
+  getDistanceMatrixAction,
 } from '../../store/home/action';
 import SearchResults from '../search-results/SearchResults';
 
@@ -16,16 +17,25 @@ const Searchbox = ({
   getInputData,
   toggleSearchResult,
   getAddressesPredictions,
+  getDistanceMatrix,
 }) => {
-  const {resultTypes, inputData} = useSelector((state) => state.homeReducer);
+  const {resultTypes, inputData, selectedPickup, selectedDropoff} = useSelector(
+    (state) => state.homeReducer,
+  );
   const handleChangeText = (key, value) => {
     getInputData({key, value});
     getAddressesPredictions();
   };
-  const handleFocus = value => {
-      toggleSearchResult(value);
-      getAddressesPredictions();
+  const handleFocus = (value) => {
+    toggleSearchResult(value);
+    getAddressesPredictions();
   };
+
+  useEffect(() => {
+    if (selectedPickup && selectedDropoff) {
+      getDistanceMatrix({selectedPickup, selectedDropoff});
+    }
+  }, [selectedPickup, selectedDropoff, getDistanceMatrix]);
   return (
     <View style={styles.searchBox}>
       <View style={styles.inputWrapper}>
@@ -37,7 +47,6 @@ const Searchbox = ({
             value={inputData.pickup}
             placeholder="Choose pick-up location"
             onFocus={() => handleFocus('pickup')}
-            onBlur={() => handleFocus('')}
             onChangeText={(text) => handleChangeText('pickup', text)}
           />
         </InputGroup>
@@ -51,7 +60,6 @@ const Searchbox = ({
             value={inputData.dropoff}
             placeholder="Choose drop-off location"
             onFocus={() => handleFocus('dropoff')}
-            onBlur={() => handleFocus('')}
             onChangeText={(text) => handleChangeText('dropoff', text)}
           />
         </InputGroup>
@@ -101,6 +109,7 @@ const mapDispatchToProps = {
   getInputData: getInputDataAction,
   toggleSearchResult: toggleSearchResultAction,
   getAddressesPredictions: getAddressesPredictionsAction,
+  getDistanceMatrix: getDistanceMatrixAction,
 };
 
 export default connect(null, mapDispatchToProps)(Searchbox);
