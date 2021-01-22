@@ -2,28 +2,41 @@ import React from 'react';
 import {Body, Left, List, ListItem, Text, View} from 'native-base';
 import {Dimensions, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useSelector} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
+import {
+  getInputDataAction,
+  getSelectedAddressAction,
+} from '../../store/home/action';
 
 const {width} = Dimensions.get('window');
 
-const SearchResults = () => {
-  const {predictions} = useSelector((state) => state.homeReducer);
+const SearchResults = ({getSelectedAddress, getInputData}) => {
+  const {predictions, resultTypes} = useSelector((state) => state.homeReducer);
+
+  const handleSelectAddress = (item) => {
+    getSelectedAddress(item.placeID);
+    getInputData({
+      key: resultTypes.pickup ? 'pickup' : 'dropoff',
+      value: item.primaryText,
+    });
+  };
   return (
     <View style={styles.searchResultsWrapper}>
       <List
         dataArray={predictions}
         renderRow={(item) => {
-          console.warn(item);
           return (
-            <ListItem button avatar>
-              <Left style={styles.leftContainer}>
-                <Icon style={styles.leftIcon} name="location-on" />
-              </Left>
-              <Body>
-                <Text style={styles.primaryText}>{item.primaryText}</Text>
-                <Text style={styles.secondaryText}>{item.secondaryText}</Text>
-              </Body>
-            </ListItem>
+            <View>
+              <ListItem onPress={() => handleSelectAddress(item)} button avatar>
+                <Left style={styles.leftContainer}>
+                  <Icon style={styles.leftIcon} name="location-on" />
+                </Left>
+                <Body>
+                  <Text style={styles.primaryText}>{item.primaryText}</Text>
+                  <Text style={styles.secondaryText}>{item.secondaryText}</Text>
+                </Body>
+              </ListItem>
+            </View>
           );
         }}
       />
@@ -61,4 +74,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchResults;
+const mapDispatchToProps = {
+  getSelectedAddress: getSelectedAddressAction,
+  getInputData: getInputDataAction,
+};
+
+export default connect(null, mapDispatchToProps)(SearchResults);
