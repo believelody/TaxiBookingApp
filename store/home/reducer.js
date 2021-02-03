@@ -90,6 +90,12 @@ const handleGetFare = (state, {payload}) => {
   });
 };
 
+const handleBookCar = (state, {payload}) => {
+  return update(state, {
+    bookings: {$set: payload},
+  });
+};
+
 const ACTIONS_HANDLERS = {
   GET_CURRENT_LOCATION: handleGetCurrentLocation,
   GET_INPUT_DATA: handleGetInputData,
@@ -98,6 +104,7 @@ const ACTIONS_HANDLERS = {
   GET_SELECTED_ADDRESS: handleGetSelectedAddress,
   GET_DISTANCE_MATRIX: handleGetDistanceMatrix,
   GET_FARE: handleGetFare,
+  BOOK_CAR: handleBookCar,
 };
 
 const initialState = {

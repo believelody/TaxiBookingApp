@@ -1,6 +1,7 @@
 import {Container} from 'native-base';
 import React, {useEffect} from 'react';
 import {connect, useSelector} from 'react-redux';
+import Fab from '../../components/fab/Fab';
 import Fare from '../../components/fare/Fare';
 import Footer from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
@@ -20,6 +21,7 @@ const Home = ({getCurrentLocation}) => {
       <Header />
       <Map region={region} />
       <Searchbox />
+      <Fab />
       <Fare fare={fare} />
       <Footer />
     </Container>
