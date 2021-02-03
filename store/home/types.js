@@ -7,6 +7,7 @@ export const homeTypes = {
   GET_SELECTED_ADDRESS: 'GET_SELECTED_ADDRESS',
   GET_DISTANCE_MATRIX: 'GET_DISTANCE_MATRIX',
   GET_FARE: 'GET_FARE',
+  BOOK_CAR: 'BOOK_CAR',
 };
 
 export default homeTypes;

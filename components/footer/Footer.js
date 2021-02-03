@@ -16,13 +16,13 @@ const Footer = () => {
       icon: 'car',
     },
     {
-      title: 'TaxiPremium',
+      title: 'TaxiPool',
       subtitle: '',
       icon: 'car',
     },
     {
-      title: 'TaxiBike',
-      subtitle: '',
+      title: 'TaxiCar',
+      subtitle: '(Premium)',
       icon: 'car',
     },
   ];

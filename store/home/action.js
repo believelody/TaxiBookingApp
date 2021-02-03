@@ -69,6 +69,7 @@ export const getDistanceMatrixAction = (payload) => async (dispatch) => {
       key: GOOGLE_API_KEY,
     })
     .finish((error, res) => {
+      // console.warn(res);
       const fare = calculateFare(
         baseRate,
         timeRate,
@@ -86,6 +87,38 @@ export const getDistanceMatrixAction = (payload) => async (dispatch) => {
       dispatch({
         type: homeTypes.GET_FARE,
         payload: fare,
+      });
+    });
+};
+
+export const bookCarAction = () => (dispatch, getState) => {
+  const payload = {
+    data: {
+      userName: 'test',
+      pickup: {
+        address: getState().homeReducer.selectedPickup.address,
+        name: getState().homeReducer.selectedPickup.name,
+        latitude: getState().homeReducer.selectedPickup.latitude,
+        longitude: getState().homeReducer.selectedPickup.longitude,
+      },
+      dropoff: {
+        address: getState().homeReducer.selectedDropoff.address,
+        name: getState().homeReducer.selectedDropoff.name,
+        latitude: getState().homeReducer.selectedDropoff.latitude,
+        longitude: getState().homeReducer.selectedDropoff.longitude,
+      },
+      fare: getState().homeReducer.fare,
+      status: 'pending',
+    },
+  };
+
+  request
+    .post('http://fe6ee0941dac.ngrok.io/api/bookings')
+    .send(payload)
+    .finish((error, res) => {
+      dispatch({
+        type: homeTypes.BOOK_CAR,
+        payload: res.body,
       });
     });
 };
