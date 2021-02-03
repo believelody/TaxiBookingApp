@@ -7,14 +7,20 @@ import Footer from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
 import Map from '../../components/map/Map';
 import Searchbox from '../../components/searchbox/Searchbox';
-import {getCurrentLocationAction} from '../../store/home/action';
+import {
+  getCurrentLocationAction,
+  getNearbyDriversAction,
+} from '../../store/home/action';
 
-const Home = ({getCurrentLocation}) => {
+const Home = ({getCurrentLocation, getNearbyDrivers}) => {
   const {region, fare} = useSelector((state) => state.homeReducer);
 
   useEffect(() => {
     getCurrentLocation();
-  }, [getCurrentLocation]);
+    setTimeout(() => {
+      getNearbyDrivers();
+    }, 1000);
+  }, [getCurrentLocation, getNearbyDrivers]);
 
   return (
     <Container>
@@ -30,6 +36,7 @@ const Home = ({getCurrentLocation}) => {
 
 const mapDispatchToProps = {
   getCurrentLocation: getCurrentLocationAction,
+  getNearbyDrivers: getNearbyDriversAction,
 };
 
 export default connect(null, mapDispatchToProps)(Home);

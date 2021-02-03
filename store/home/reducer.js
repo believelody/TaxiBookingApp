@@ -96,6 +96,12 @@ const handleBookCar = (state, {payload}) => {
   });
 };
 
+const handleGetNearbyDrivers = (state, {payload}) => {
+  return update(state, {
+    nearbyDrivers: {$set: payload},
+  });
+};
+
 const ACTIONS_HANDLERS = {
   GET_CURRENT_LOCATION: handleGetCurrentLocation,
   GET_INPUT_DATA: handleGetInputData,
@@ -105,6 +111,7 @@ const ACTIONS_HANDLERS = {
   GET_DISTANCE_MATRIX: handleGetDistanceMatrix,
   GET_FARE: handleGetFare,
   BOOK_CAR: handleBookCar,
+  GET_NEARBY_DRIVERS: handleGetNearbyDrivers,
 };
 
 const initialState = {
@@ -121,6 +128,7 @@ const initialState = {
   selectedPickup: null,
   distanceMatrix: {},
   fare: 0,
+  nearbyDrivers: [],
 };
 
 export default function homeReducer(state = initialState, action) {

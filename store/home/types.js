@@ -8,6 +8,7 @@ export const homeTypes = {
   GET_DISTANCE_MATRIX: 'GET_DISTANCE_MATRIX',
   GET_FARE: 'GET_FARE',
   BOOK_CAR: 'BOOK_CAR',
+  GET_NEARBY_DRIVERS: 'GET_NEARBY_DRIVERS,',
 };
 
 export default homeTypes;

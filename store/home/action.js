@@ -113,11 +113,26 @@ export const bookCarAction = () => (dispatch, getState) => {
   };
 
   request
-    .post('http://fe6ee0941dac.ngrok.io/api/bookings')
+    .post('http://29b2df04c555.ngrok.io/api/bookings')
     .send(payload)
     .finish((error, res) => {
       dispatch({
         type: homeTypes.BOOK_CAR,
+        payload: res.body,
+      });
+    });
+};
+
+export const getNearbyDriversAction = () => (dispatch, getState) => {
+  request
+    .get('http://29b2df04c555.ngrok.io/api/driverLocation')
+    .query({
+      latitude: getState().homeReducer.region.latitude,
+      longitude: getState().homeReducer.region.longitude,
+    })
+    .finish((error, res) => {
+      dispatch({
+        type: homeTypes.GET_NEARBY_DRIVERS,
         payload: res.body,
       });
     });

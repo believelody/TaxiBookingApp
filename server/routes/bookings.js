@@ -5,7 +5,7 @@ const dbConfig = require('../config');
 
 const db = mongojs(dbConfig.URI, ['bookings']);
 
-router.get('/bookings', (req, res, next) => {
+router.get('/', (req, res, next) => {
   console.log('get bookings');
   db.bookings.find((err, bookings) => {
     if (err) {
@@ -15,7 +15,7 @@ router.get('/bookings', (req, res, next) => {
   });
 });
 
-router.post('/bookings', (req, res, next) => {
+router.post('/', (req, res, next) => {
   const booking = req.body.data;
   if (!booking.userName) {
     res.status(400).json({
